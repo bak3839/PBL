@@ -147,6 +147,7 @@
             </select>
             <label for="grade">전공학점 입력 :</label>
             <input type="text" name="grade" id="grade" placeholder="ex) 55">
+            <input type="button" onclick=cal() value="계산하기">
         </fieldset>
     </div>
     <div class="gradeset">
@@ -187,25 +188,51 @@
         const num = target2.value;
     }
 
-    
+
     for (var i = 0; i < data3.length; i++) {
 
         if (jsonData1[i].영역 == "기초") {
-            document.getElementById('basic').innerHTML += "<input type='checkbox' value='' id = " + i + ">" + jsonData1[i].교과목명 + "<br/></input>";
+            document.getElementById('basic').innerHTML += "<input type='checkbox' value='' id = " + i + " onclick = cal(" + i + ")>" + jsonData1[i].교과목명 + "<br/></input>";
         }
 
         else if (jsonData1[i].영역 == "핵심") {
-            document.getElementById('core').innerHTML += "<input type='checkbox' value='' id = " + i + ">" + jsonData1[i].교과목명 + "<br/></input>";
+            document.getElementById('core').innerHTML += "<input type='checkbox' value='' id = " + i + " onclick = cal(" + i + ")>" + jsonData1[i].교과목명 + "<br/></input>";
         }
 
         else if (jsonData1[i].영역 == "균형") {
-            document.getElementById('balance').innerHTML += "<input type='checkbox' value='' id = " + i + ">" + jsonData1[i].교과목명 + "<br/></input>";
+            document.getElementById('balance').innerHTML += "<input type='checkbox' value='' id = " + i + " onclick = cal(" + i + ")>" + jsonData1[i].교과목명 + "<br/></input>";
         }
 
         else if (jsonData1[i].영역 == "") {
-            document.getElementById('normal').innerHTML += "<input type='checkbox' value='' id = " + i + ">" + jsonData1[i].교과목명 + "<br/></input>";
+            document.getElementById('normal').innerHTML += "<input type='checkbox' value='' id = " + i + " onclick = cal(" + i + ")>" + jsonData1[i].교과목명 + "<br/></input>";
         }
     }
+    var res = 0; // 총 학점
+    var basic = 0; // 기초
+    var std = 0; // 일반
+    var core = 0; // 핵심
+    var balance = 0; // 균형
+
+    function cal(i) {
+        const is_checked = document.getElementById(i).checked;
+        if (is_checked == true) {
+            res += jsonData1[i].학점;
+            if (jsonData1[i].영역 == "기초") basic += jsonData1[i].학점;
+            else if (jsonData1[i].영역 == "") std += jsonData1[i].학점;
+            else if (jsonData1[i].영역 == "핵심") core += jsonData1[i].학점;
+            else if (jsonData1[i].영역 == "균형") balance += jsonData1[i].학점;      
+        }
+
+        else {
+            res -= jsonData1[i].학점;
+            if (jsonData1[i].영역 == "기초") basic -= jsonData1[i].학점;
+            else if (jsonData1[i].영역 == "") std -= jsonData1[i].학점;
+            else if (jsonData1[i].영역 == "핵심") core -= jsonData1[i].학점;
+            else if (jsonData1[i].영역 == "균형") balance -= jsonData1[i].학점;
+        }
+        alert(res + " " + basic + " " + std + " " + core + " " + balance);
+    }
+
 </script>
 
 </html>
