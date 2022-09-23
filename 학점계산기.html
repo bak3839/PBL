@@ -99,6 +99,14 @@
             font-size: 15pt;
             margin: 0;
         }
+
+        .ressult {
+            visibility: hidden;
+        }
+
+        .ressult_show {
+            visibility: visible;
+        }
     </style>
 </head>
 
@@ -147,7 +155,7 @@
             </select>
             <label for="grade">전공학점 입력 :</label>
             <input type="text" name="grade" id="grade" placeholder="ex) 55">
-            <input type="button" onclick=cal() value="계산하기">
+            <input type="button" onclick=cal() value="결과확인">
         </fieldset>
     </div>
     <div class="gradeset">
@@ -176,16 +184,28 @@
             </fieldset>
         </div>
     </div>
+
+    <!-- 결과 출력하는 곳 클래스 visibility 설정 온클릭하면 show로 변경하게 만들기-->
+    <div class="result">
+        <div>
+
+        </div>
+    </div> 
+
 </body>
 
 <script type="text/javascript">
     let jsonData1 = JSON.parse(JSON.stringify(data3));
 
-    const major = (target) => {
-        const major = target.value;
+    var major1; // 단과대
+    var num1; // 학번
+
+    function major(target) { // 단과대 값
+        major1 = target.value;
     }
-    const num = (target2) => {
-        const num = target2.value;
+
+    function num(target) { // 학번 값
+        num1 = target.value;
     }
 
 
@@ -213,24 +233,73 @@
     var core = 0; // 핵심
     var balance = 0; // 균형
 
+
+
+    var dy = 0; // 다양성존중역량 윤리실천역량 -> 2
+
+    var yc = 0; // 융복합역량 창의적문제해결역량 -> 2 
+
+
     function cal(i) {
-        const is_checked = document.getElementById(i).checked;
-        if (is_checked == true) {
+        const is_checked = document.getElementById(i).checked; // 체크박스 체크 확인 변수
+
+        if (is_checked == true) { // 체크하면
             res += jsonData1[i].학점;
+
             if (jsonData1[i].영역 == "기초") basic += jsonData1[i].학점;
+
             else if (jsonData1[i].영역 == "") std += jsonData1[i].학점;
-            else if (jsonData1[i].영역 == "핵심") core += jsonData1[i].학점;
-            else if (jsonData1[i].영역 == "균형") balance += jsonData1[i].학점;      
+
+            else if (jsonData1[i].영역 == "핵심") {
+                if (jsonData1[i].분야 == "다양성존중역량" || jsonData1[i].분야 == "윤리실천역량") {
+                    dy += jsonData1[i].학점;
+                    core += jsonData1[i].학점;
+                }
+
+                else if (jsonData1[i].분야 == "융복합역량" || jsonData1[i].분야 == "창의적문제해결역량") {
+                    yc += jsonData1[i].학점;
+                    core += jsonData1[i].학점;
+                }
+            }
+
+            else if (jsonData1[i].영역 == "균형") {
+                if (jsonData1[i].분야 == major1) std += jsonData1[i].학점;
+
+                else balance += jsonData1[i].학점;
+            }
         }
 
-        else {
+        else { // 체크 풀면
             res -= jsonData1[i].학점;
+
             if (jsonData1[i].영역 == "기초") basic -= jsonData1[i].학점;
+
             else if (jsonData1[i].영역 == "") std -= jsonData1[i].학점;
-            else if (jsonData1[i].영역 == "핵심") core -= jsonData1[i].학점;
-            else if (jsonData1[i].영역 == "균형") balance -= jsonData1[i].학점;
+
+            else if (jsonData1[i].영역 == "핵심") {
+                if (jsonData1[i].분야 == "다양성존중역량" || jsonData1[i].분야 == "윤리실천역량") {
+                    dy -= jsonData1[i].학점;
+                    core -= jsonData1[i].학점;
+                }
+
+                else if (jsonData1[i].분야 == "융복합역량" || jsonData1[i].분야 == "창의적문제해결역량") {
+                    yc -= jsonData1[i].학점;
+                    core -= jsonData1[i].학점;
+                }
+            }
+
+            else if (jsonData1[i].영역 == "균형") {
+                if (jsonData1[i].분야 == major1) std -= jsonData1[i].학점;
+
+                else balance -= jsonData1[i].학점;
+            }
         }
-        alert(res + " " + basic + " " + std + " " + core + " " + balance);
+
+        alert("총학점: " + res + " 기초: " + basic + " 일반:" + std + " 핵심:" + core + " 균형:" + balance + " 다양성, 윤리:" + dy + "융복합, 창의:" + yc);
+    }
+
+    function show_result(){ 
+
     }
 
 </script>
