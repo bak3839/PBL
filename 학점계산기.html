@@ -92,6 +92,7 @@
             position: relative;
             margin: 0 auto;
             width: 1600px;
+            height: 525.5px;
         }
 
         .gradeset2 {
@@ -100,13 +101,28 @@
             margin: 0;
         }
 
-        .ressult {
-            visibility: hidden;
+        .table_res td {
+            padding:15px 0;
+            border: 2px solid black;
         }
 
-        .ressult_show {
-            visibility: visible;
+        .table_res {
+            margin: 0 auto;
+            width: 1200px;
+            font-size: 30px;
+            border: 2px solid black;
         }
+
+        .result {
+            visibility: hidden;
+            margin-top: 10px;
+        }
+
+        .result_show {
+            visibility: visible;
+            margin-top: 10px;
+        }
+
     </style>
 </head>
 
@@ -154,8 +170,8 @@
                 <option value="22">22학번</option>
             </select>
             <label for="grade">전공학점 입력 :</label>
-            <input type="text" name="grade" id="grade" placeholder="ex) 55">
-            <input type="button" onclick=cal() value="결과확인">
+            <input type="text" id="grade" placeholder="ex) 55">
+            <input type="button" onclick=show_result() value="결과확인">
         </fieldset>
     </div>
     <div class="gradeset">
@@ -186,11 +202,66 @@
     </div>
 
     <!-- 결과 출력하는 곳 클래스 visibility 설정 온클릭하면 show로 변경하게 만들기-->
-    <div class="result">
-        <div>
+    <div class="result" id="display">
+        <table class="table_res" id="tableid">
+         <tr> 
+             <td>기초교양</td>
+             <td> </td>
+             <td> </td>
+             <td></td>
+         </tr>
+    
+         <tr>
+             <td rowspan="2">핵심교양</td>
+             <td>다양성존중역량, 윤리실천역량</td>
+             <td></td>
+             <td></td>
+         </tr>
+    
+         <tr>
+             <td>융복합역량, 창의적문제해결역량</td>
+             <td></td>
+             <td></td>
+         </tr>
+    
+         <tr>
+             <td rowspan="5">균형교양</td>
+             <td>인문</td>
+             <td> </td>
+             <td rowspan="5"> </td>
+         </tr>
+         <tr>
+            <td>사회</td>
+            <td> </td>
+        </tr>
+        <tr>
+            <td>자연</td>
+            <td> </td>
+        </tr>
+        <tr>
+            <td>공학</td>
+            <td> </td>
+        </tr>
+        <tr>
+            <td>예술</td>
+            <td> </td>
+        </tr>
+    
+         <tr>
+             <td>일반교양</td>
+             <td> </td>
+             <td> </td>
+             <td></td>
+         </tr>
 
-        </div>
-    </div> 
+         <tr>
+            <td>총 이수학점</td>
+            <td> </td>
+            <td> </td>
+            <td> </td>
+        </tr>
+        </table>
+     </div>
 
 </body>
 
@@ -199,6 +270,7 @@
 
     var major1; // 단과대
     var num1; // 학번
+    var mg = document.getElementById('grade'); // 전공학점
 
     function major(target) { // 단과대 값
         major1 = target.value;
@@ -298,8 +370,36 @@
         alert("총학점: " + res + " 기초: " + basic + " 일반:" + std + " 핵심:" + core + " 균형:" + balance + " 다양성, 윤리:" + dy + "융복합, 창의:" + yc);
     }
 
-    function show_result(){ 
+    var pass = 0;
+    function show_result(){
+        // 학점
+        document.getElementById("display").classList.replace('result', 'result_show')
+        var total = Number(mg.value) + res;
+        document.getElementById("tableid").getElementsByTagName("tr")[0].getElementsByTagName("td")[2].innerHTML = basic; // 기초
+        document.getElementById("tableid").getElementsByTagName("tr")[1].getElementsByTagName("td")[2].innerHTML = dy; // 다양성, 윤리
+        document.getElementById("tableid").getElementsByTagName("tr")[2].getElementsByTagName("td")[1].innerHTML = yc; // 융복합, 창의
+        document.getElementById("tableid").getElementsByTagName("tr")[3].getElementsByTagName("td")[2].innerHTML = balance; // 인문
+        document.getElementById("tableid").getElementsByTagName("tr")[4].getElementsByTagName("td")[1].innerHTML = balance; // 사회
+        document.getElementById("tableid").getElementsByTagName("tr")[5].getElementsByTagName("td")[1].innerHTML = balance; // 자연
+        document.getElementById("tableid").getElementsByTagName("tr")[6].getElementsByTagName("td")[1].innerHTML = balance; // 공학
+        document.getElementById("tableid").getElementsByTagName("tr")[7].getElementsByTagName("td")[1].innerHTML = balance; // 예술
+        document.getElementById("tableid").getElementsByTagName("tr")[8].getElementsByTagName("td")[2].innerHTML = std; // 일반
+        document.getElementById("tableid").getElementsByTagName("tr")[9].getElementsByTagName("td")[2].innerHTML = total;// 총 학점
 
+        if(total >= 130) document.getElementById("tableid").getElementsByTagName("tr")[9].getElementsByTagName("td")[3].innerHTML = "<span style='color: blue'>만족</span>";
+        else document.getElementById("tableid").getElementsByTagName("tr")[9].getElementsByTagName("td")[3].innerHTML = "<span style='color: red'>불만족</span>";
+
+        if(basic >= 11) document.getElementById("tableid").getElementsByTagName("tr")[0].getElementsByTagName("td")[3].innerHTML = "<span style='color: blue'>만족</span>";
+        else document.getElementById("tableid").getElementsByTagName("tr")[0].getElementsByTagName("td")[3].innerHTML = "<span style='color: red'>불만족</span>";
+
+        if(dy >= 2) document.getElementById("tableid").getElementsByTagName("tr")[1].getElementsByTagName("td")[3].innerHTML = "<span style='color: blue'>만족</span>";
+        else document.getElementById("tableid").getElementsByTagName("tr")[1].getElementsByTagName("td")[3].innerHTML = "<span style='color: red'>불만족</span>";
+
+        if(yc >= 2) document.getElementById("tableid").getElementsByTagName("tr")[2].getElementsByTagName("td")[2].innerHTML = "<span style='color: blue'>만족</span>";
+        else document.getElementById("tableid").getElementsByTagName("tr")[2].getElementsByTagName("td")[2].innerHTML = "<span style='color: red'>불만족</span>";
+
+        if(balance >= 9) document.getElementById("tableid").getElementsByTagName("tr")[3].getElementsByTagName("td")[3].innerHTML = "<span style='color: blue'>만족</span>";
+        else document.getElementById("tableid").getElementsByTagName("tr")[3].getElementsByTagName("td")[3].innerHTML = "<span style='color: red'>불만족</span>";
     }
 
 </script>
